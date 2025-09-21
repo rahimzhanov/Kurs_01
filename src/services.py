@@ -5,16 +5,7 @@ from utils import read_excel
 from logger import get_logger
 
 # Инициализация логгера
-log = get_logger('search.log')
-
-import json
-import pandas as pd
-from config import PATH_TO_OPERATIONS
-from utils import read_excel
-from logger import get_logger
-
-# Инициализация логгера
-log = get_logger('search.log')
+log = get_logger('services.log')
 
 
 def search_transactions(search_query: str) -> list:
