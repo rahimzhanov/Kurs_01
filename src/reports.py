@@ -1,7 +1,7 @@
 import pandas as pd
 from datetime import datetime
-from logger import get_logger
-from utils import read_excel
+from src.logger import get_logger
+from src.utils import read_excel
 from config import PATH_TO_OPERATIONS
 
 # Загружаем данные
@@ -50,12 +50,12 @@ def spending_by_weekday(transactions: pd.DataFrame, date: str = None) -> pd.Data
 
         # 7. Переименовываем дни недели
         days = {0: 'Понедельник', 1: 'Вторник', 2: 'Среда',
-                3: 'Четверг', 4: 'Пятница', 5: 'Суббота', 6: 'Воскресенье'}
+                3: 'Четверг', 4: 'Пятница', 5: 'Суббота', 6: 'Воскресеньe'}
 
         result['День недели'] = result['День недели'].map(days)
         result = result.rename(columns={'Траты': 'Средние траты'})
 
-        log.info(f"Рассчитаны траты за 3 месяца")
+        log.info("Рассчитаны траты за 3 месяца")
         return result
 
     except Exception as e:
@@ -63,32 +63,29 @@ def spending_by_weekday(transactions: pd.DataFrame, date: str = None) -> pd.Data
         return pd.DataFrame()
 
 
-
-def spending_by_weekday_json(transactions: pd.DataFrame, date: str = None) -> str:
+def spending_by_weekday_json(result_df: pd.DataFrame) -> str:
     """
-    Возвращает средние траты по дням недели в формате JSON.
+    Преобразует DataFrame с тратами по дням недели в формат JSON.
 
     Args:
-        transactions: DataFrame с транзакциями
-        date: опциональная дата в формате YYYY-MM-DD HH:MM:SS
+        result_df: DataFrame с результатами работы spending_by_weekday()
 
     Returns:
         str: JSON-строка с результатами
     """
-    result_df = spending_by_weekday(transactions, date)
-
     if result_df.empty:
+        log.error('Нет данных для преобразования в JSON')
         return '{"error": "Нет данных"}'
 
-
+    log.info('Данные успешно преобразованы в JSON')
     return result_df.to_json(force_ascii=False, orient='records')
 
 
 # Пример использования
 if __name__ == "__main__":
 
-
     # Простой тест
     result = spending_by_weekday(df, "2021-08-14 12:12:12")
     print("Средние траты по дням недели:")
     print(result)
+    spending_by_weekday_json(result)

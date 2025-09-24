@@ -1,8 +1,7 @@
 import json
-import pandas as pd
 from config import PATH_TO_OPERATIONS
-from utils import read_excel
-from logger import get_logger
+from src.utils import read_excel
+from src.logger import get_logger
 
 # Инициализация логгера
 log = get_logger('services.log')
@@ -32,8 +31,8 @@ def search_transactions(search_query: str) -> list:
 
         # Фильтруем транзакции по поисковому запросу
         mask = (
-                operations_df['Описание'].str.lower().str.contains(search_lower, na=False) |
-                operations_df['Категория'].str.lower().str.contains(search_lower, na=False)
+            operations_df['Описание'].str.lower().str.contains(search_lower, na=False) |
+            operations_df['Категория'].str.lower().str.contains(search_lower, na=False)
         )
 
         found_transactions = operations_df[mask]
@@ -94,4 +93,3 @@ if __name__ == "__main__":
         print(f"\nПоиск: '{query}'")
         result = search_transactions_json(query)
         print(result)
-

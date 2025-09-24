@@ -1,9 +1,8 @@
 import json
-from datetime import datetime
-from utils import read_excel, greeting, get_cards_info, top_five_operations, get_currencies, get_stocks, \
+from src.utils import read_excel, greeting, get_cards_info, top_five_operations, get_currencies, get_stocks, \
     filter_data_by_date
 from config import PATH_TO_OPERATIONS, PATH_TO_USER_SETTINGS
-from logger import get_logger
+from src.logger import get_logger
 
 log = get_logger('views.log')
 
@@ -86,6 +85,10 @@ def generate_response(input_datetime: str) -> dict:
                 "price": float(price)
             })
 
+    log.info(f"Ответ сформирован: {len(response['cards'])} карт, "
+             f"{len(response['top_transactions'])} транзакций, "
+             f"{len(response['currency_rates'])} валют, "
+             f"{len(response['stock_prices'])} акций")
     return response
 
 

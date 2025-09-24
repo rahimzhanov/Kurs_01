@@ -1,11 +1,10 @@
 import pandas as pd
-from logger import get_logger
-from  datetime import datetime
+from src.logger import get_logger
+from datetime import datetime
 from config import PATH_TO_OPERATIONS
 import os
 from dotenv import load_dotenv
 import requests
-
 
 load_dotenv()
 
@@ -15,16 +14,16 @@ log = get_logger('utils.log')
 def greeting():
     hour = datetime.now().hour
     if 6 <= hour < 12:
-        log.info(f'Функция greeting вернула - Доброе утро')
+        log.info('Функция greeting вернула - Доброе утро')
         return "Доброе утро"
     elif 12 <= hour < 18:
-        log.info(f'Функция greeting вернула - Добрый день')
+        log.info('Функция greeting вернула - Добрый день')
         return 'Добрый день'
     elif 18 <= hour < 24:
-        log.info(f'Функция greeting вернула - Добрый вечер')
+        log.info('Функция greeting вернула - Добрый вечер')
         return 'Добрый вечер'
     else:  # 0-6 часов
-        log.info(f'Функция greeting вернула - Доброй ночи')
+        log.info('Функция greeting вернула - Доброй ночи')
         return 'Доброй ночи'
 
 
@@ -51,10 +50,10 @@ def filter_data_by_date(operations_df: pd.DataFrame, date_end: str) -> pd.DataFr
     filtered_df = operations_df[
         (operations_df["Дата операции"] >= first_date) &
         (operations_df["Дата операции"] <= end_date)
-        ]
+    ]
 
-    log.info("Отфильтрованные данные от %s до %s: %s rows",
-                 first_date, end_date, len(filtered_df))
+    log.info("Отфильтрованные данные от %s до %s: %s rows", first_date, end_date, len(filtered_df))
+
     return filtered_df
 
 
@@ -69,7 +68,11 @@ def get_cards_info(operations_df: pd.DataFrame) -> pd.DataFrame:
         DataFrame только с данными карты
     """
     operations_df = operations_df[(operations_df['Сумма платежа'] < 0) & (operations_df['Статус'] == 'OK')]
-    cards_info_df = operations_df[['Номер карты', 'Сумма платежа', 'Кэшбэк']].groupby('Номер карты')[['Сумма платежа', 'Кэшбэк']].sum()
+    cards_info_df = (
+        operations_df[['Номер карты', 'Сумма платежа', 'Кэшбэк']]
+        .groupby('Номер карты')[['Сумма платежа', 'Кэшбэк']]
+        .sum()
+    )
     return cards_info_df
 
 
@@ -123,31 +126,26 @@ def get_currencies(currency_codes: list) -> dict:
 
 def get_stocks(stocks: list) -> dict:
     """
-        Получает стоимость акций из списка.
+    Получает стоимость акций из списка.
 
-        Args:
-            stocks: список акций
+    Args:
+        stocks: список акций
 
-        Returns:
-            dict: Словарь {код_акции: стоимость} или сообщение об ошибке
-        """
+    Returns:
+        dict: Словарь {код_акции: стоимость} или сообщение об ошибке
+    """
     api_key = os.getenv('API_KEY')
 
-
-
     try:
-        for stock in stocks:
-            url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock}&apikey={api_key}"
-
-        response = requests.get(url)
-        response.raise_for_status()
-        data = response.json()
-
         result = {}
         for stock in stocks:
-            result[stock] = data["Global Quote"]["05. price"]
+            url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol={stock}&apikey={api_key}"
+            response = requests.get(url)
+            response.raise_for_status()
+            data = response.json()
+            result[stock] = float(data["Global Quote"]["05. price"])
 
-        log.info('get_stocks: курс валют получен')
+        log.info('get_stocks: стоимость акций получена')
         return result
 
     except:
