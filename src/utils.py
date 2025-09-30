@@ -1,10 +1,12 @@
-import pandas as pd
-from src.logger import get_logger
-from datetime import datetime
-from config import PATH_TO_OPERATIONS
 import os
-from dotenv import load_dotenv
+from datetime import datetime
+
+import pandas as pd
 import requests
+from dotenv import load_dotenv
+
+from config import PATH_TO_OPERATIONS
+from src.logger import get_logger
 
 load_dotenv()
 
@@ -151,13 +153,3 @@ def get_stocks(stocks: list) -> dict:
     except:
         log.warning('get_stocks: Ошибка получения данных')
         return "Ошибка получения данных"
-
-
-if __name__ == "__main__":
-
-    data_df = read_excel(PATH_TO_OPERATIONS)
-    # result = filter_data_by_date(data_df, "2021-08-14 12:12:12")
-    # print(get_cards_info(data_df))
-    # print(top_five_operations(data_df))
-    print(get_currencies(["USD", "EUR"]))
-    print(get_stocks(["AAPL", "AMZN", "GOOGL", "MSFT", "TSLA"]))

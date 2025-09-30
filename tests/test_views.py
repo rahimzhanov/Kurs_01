@@ -1,8 +1,10 @@
-import pytest
-from unittest.mock import patch, Mock
-from src.views import generate_response, load_user_settings
-import pandas as pd
 from datetime import datetime
+from unittest.mock import Mock, patch
+
+import pandas as pd
+import pytest
+
+from src.views import generate_response, load_user_settings
 
 
 class TestViews:

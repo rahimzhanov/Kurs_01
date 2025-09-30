@@ -1,8 +1,9 @@
 import json
-from src.utils import read_excel, greeting, get_cards_info, top_five_operations, get_currencies, get_stocks, \
-    filter_data_by_date
+
 from config import PATH_TO_OPERATIONS, PATH_TO_USER_SETTINGS
 from src.logger import get_logger
+from src.utils import (filter_data_by_date, get_cards_info, get_currencies, get_stocks, greeting, read_excel,
+                       top_five_operations)
 
 log = get_logger('views.log')
 
@@ -90,10 +91,3 @@ def generate_response(input_datetime: str) -> dict:
              f"{len(response['currency_rates'])} валют, "
              f"{len(response['stock_prices'])} акций")
     return response
-
-
-# Пример использования
-if __name__ == "__main__":
-    # Тестируем функцию
-    result = generate_response("2021-08-14 12:12:12")
-    print(json.dumps(result, ensure_ascii=False, indent=2))

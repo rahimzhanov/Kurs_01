@@ -1,8 +1,13 @@
-import pandas as pd
+import functools
+import json
+import logging
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Callable, Optional
+
+from config import PATH_TO_LOGGER, PATH_TO_OPERATIONS
 from src.logger import get_logger
 from src.utils import read_excel
-from config import PATH_TO_OPERATIONS
 
 # Загружаем данные
 df = read_excel(PATH_TO_OPERATIONS)
@@ -10,6 +15,41 @@ df = read_excel(PATH_TO_OPERATIONS)
 log = get_logger('reports.log')
 
 
+def save_report(filename: Optional[str] = None):
+    """
+    Декоратор для сохранения результата функции-отчёта в JSON-файл.
+
+    Args:
+        filename: имя файла. Если не указано — генерируется автоматически.
+    """
+    def decorator(func: Callable) -> Callable:
+        @functools.wraps(func)
+        def wrapper(*args, **kwargs) -> Any:
+            # Выполняем функцию
+            result = func(*args, **kwargs)
+
+            # Определяем имя файла
+            if filename:
+                file_path = Path(filename)
+            else:
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                file_path = Path(f"report_{timestamp}.json")
+
+            # Сохраняем результат
+            try:
+                with open(file_path, 'w', encoding='utf-8') as f:
+                    json.dump(result, f, ensure_ascii=False, indent=2)
+                log.info(f"Отчет сохранён: {file_path}")
+            except Exception as e:
+                log.error(f"Ошибка при сохранении отчета '{file_path}': {e}")
+
+            return result
+
+        return wrapper
+    return decorator
+
+
+@save_report
 def spending_by_weekday(transactions: pd.DataFrame, date: str = None) -> pd.DataFrame:
     """
     Возвращает средние траты по дням недели за последние 3 месяца.
@@ -79,13 +119,3 @@ def spending_by_weekday_json(result_df: pd.DataFrame) -> str:
 
     log.info('Данные успешно преобразованы в JSON')
     return result_df.to_json(force_ascii=False, orient='records')
-
-
-# Пример использования
-if __name__ == "__main__":
-
-    # Простой тест
-    result = spending_by_weekday(df, "2021-08-14 12:12:12")
-    print("Средние траты по дням недели:")
-    print(result)
-    spending_by_weekday_json(result)

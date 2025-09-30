@@ -1,7 +1,9 @@
-import pytest
-from unittest.mock import patch, Mock
-from src.services import search_transactions
+from unittest.mock import Mock, patch
+
 import pandas as pd
+import pytest
+
+from src.services import search_transactions
 
 
 class TestServices:

@@ -1,7 +1,8 @@
 import json
+
 from config import PATH_TO_OPERATIONS
-from src.utils import read_excel
 from src.logger import get_logger
+from src.utils import read_excel
 
 # Инициализация логгера
 log = get_logger('services.log')
@@ -82,14 +83,3 @@ def search_transactions_json(search_query: str) -> str:
     }
 
     return json.dumps(response, ensure_ascii=False, indent=2)
-
-
-# Пример использования
-if __name__ == "__main__":
-    # Тестируем разные сценарии
-    test_queries = ["Лента", "Несуществующее Слово", ""]
-
-    for query in test_queries:
-        print(f"\nПоиск: '{query}'")
-        result = search_transactions_json(query)
-        print(result)

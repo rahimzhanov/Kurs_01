@@ -1,8 +1,10 @@
-import pytest
-from unittest.mock import patch
-from src.reports import spending_by_weekday
-import pandas as pd
 from datetime import datetime
+from unittest.mock import patch
+
+import pandas as pd
+import pytest
+
+from src.reports import spending_by_weekday
 
 
 class TestReports:
