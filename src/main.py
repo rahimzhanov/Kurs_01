@@ -5,7 +5,7 @@
 from datetime import datetime
 
 from config import PATH_TO_OPERATIONS
-from src.reports import spending_by_weekday_json
+from src.reports import spending_by_weekday, spending_by_weekday_json
 from src.services import search_transactions_json
 from src.utils import read_excel
 from src.views import generate_response

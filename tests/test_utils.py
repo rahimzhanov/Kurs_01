@@ -1,10 +1,8 @@
-# tests/test_utils.py
-
 from unittest.mock import Mock, patch
 
 import pytest
 
-from src.utils import get_currencies, get_stocks, greeting
+from src.utils import get_currencies, greeting
 
 
 class TestUtils:

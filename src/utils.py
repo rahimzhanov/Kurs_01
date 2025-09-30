@@ -5,7 +5,6 @@ import pandas as pd
 import requests
 from dotenv import load_dotenv
 
-from config import PATH_TO_OPERATIONS
 from src.logger import get_logger
 
 load_dotenv()

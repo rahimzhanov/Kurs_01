@@ -1,11 +1,12 @@
 import functools
 import json
-import logging
 from datetime import datetime
 from pathlib import Path
 from typing import Any, Callable, Optional
 
-from config import PATH_TO_LOGGER, PATH_TO_OPERATIONS
+import pandas as pd
+
+from config import PATH_TO_OPERATIONS
 from src.logger import get_logger
 from src.utils import read_excel
 
